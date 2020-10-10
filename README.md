@@ -1,183 +1,97 @@
 # Project 2 - Ames Housing Data and Kaggle Challenge
 
-Welcome to Project 2! It's time to start modeling.
+## Ames Housing Data Regression
+by Adrian Chapman
 
-**Primary Learning Objectives:**
-1. Creating and iteratively refining a regression model
-2. Using [Kaggle](https://www.kaggle.com/) to practice the modeling process
-3. Providing business insights through reporting and presentation.
+### Problem Statement
 
-You are tasked with creating a regression model based on the Ames Housing Dataset. This model will predict the price of a house at sale.
+The Ames housing data contains information on houses sold in Ames, IA from the years 2006 to 2010.  Many features reagarding the quality, size, age, and location of the homes are included - totaling 82 variables for modeling. This project applies advance regression techniques to determine what regression methodologies are successful in predicting housing sale price from this data.  In addition, interpretable and actionable insights for current and potential homeowners are discussed.  
 
-The Ames Housing Dataset is an exceptionally detailed and robust dataset with over 70 columns of different features relating to houses.
+--- 
 
-Secondly, we are hosting a competition on Kaggle to give you the opportunity to practice the following skills:
+### Data Dictionary
 
-- Refining models over time
-- Use of train-test split, cross-validation, and data with unknown values for the target to simulate the modeling process
-- The use of Kaggle as a place to practice data science
+The data dictionary for the Ames housing data can be found [here](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt).
 
-As always, you will be submitting a technical report and a presentation. **You may find that the best model for Kaggle is not the best model to address your data science problem.**
-
-## Set-up
-
-Before you begin working on this project, please do the following:
-
-1. Sign up for an account on [Kaggle](https://www.kaggle.com/)
-2. **IMPORTANT**: Click this link ([Regression Challenge Sign Up](https://www.kaggle.com/t/9f7869156c044c818a506803ad32a535)) to **join** the competition (otherwise you will not be able to make submissions!)
-3. Review the material on the [DSI-US-13 Regression Challenge](https://www.kaggle.com/c/dsi-us-13-project-2-regression-challenge)
-4. Review the [data description](http://jse.amstat.org/v19n3/decock/DataDocumentation.txt).
-
-## The Modeling Process
-
-1. The train dataset has all of the columns that you will need to generate and refine your models. The test dataset has all of those columns except for the target that you are trying to predict in your Regression model.
-2. Generate your regression model using the training data. We expect that within this process, you'll be making use of:
-    - train-test split
-    - cross-validation / grid searching for hyperparameters
-    - strong exploratory data analysis to question correlation and relationship across predictive variables
-    - code that reproducibly and consistently applies feature transformation (such as the preprocessing library)
-3. Predict the values for your target column in the test dataset and submit your predictions to Kaggle to see how your model does against unknown data.
-    - **Note**: Kaggle expects to see your submissions in a specific format. Check the challenge's page to make sure you are formatting your CSVs correctly!
-    - **You are limited to models you've learned in class**. In other words, you cannot use XGBoost, Neural Networks or any other advanced model for this project.
-4. Evaluate your models!
-    - consider your evaluation metrics
-    - consider your baseline score
-    - how can your model be used for inference?
-    - why do you believe your model will generalize to new data?
-
-## Submission
-
-Materials must be submitted by the beginning of class on **Friday, October 9**.
-
-The last day for the Kaggle competition will be **Friday, October 9**.
-
-Your technical report will be hosted on Github Enterprise. Make sure it includes:
-
-- A README.md (that isn't this file)
-- Jupyter notebook(s) with your analysis and models (renamed to describe your project)
-- At least one successful prediction submission on [DSI-US-13 Regression Challenge](https://www.kaggle.com/c/dsi-us-13-project-2-regression-challenge) --  you should see your name in the "[Leaderboard](https://www.kaggle.com/c/dsi-us-13-project-2-regression-challenge/leaderboard)" tab.
-- Data files
-- Presentation slides
-- Any other necessary files (images, etc.)
-
-**Check with your local instructor for how they would like you to submit your repo for review.**
+In total, there were 23 nomina, 23 ordinal, 14 discrete, and 20 continuous variables to model with.  
 
 ---
 
-## Presentation Structure
+### Data Cleaning
 
-- **Must be within time limit established by local instructor.**
-- Use Google Slides or some other visual aid (Keynote, Powerpoint, etc).
-- Consider the audience. **Check with your local instructor for direction**.
-- Start with the **data science problem**.
-- Use visuals that are appropriately scaled and interpretable.
-- Talk about your procedure/methodology (high level).
-- Talk about your primary findings.
-- Make sure you provide **clear recommendations** that follow logically from your analyses and narrative and answer your data science problem.
+All data cleaning steps are carried out in the file **01_EDA_and_Cleaning** in the *code** directory of this repository.  This file takes in the 'train.csv' and 'test.csv' files to produce clean datasets for testing: 'train_clean_features.csv; and 'test_clean_features.csv', in the *datasets* directory. Cleaning steps for each variable type are outlined below:
 
-Be sure to rehearse and time your presentation before class.
+Continouous Variables: 
+- Assumed missing values meant the feature didn’t exist for that property for ‘Lot Frontage’ and ‘Mas Vnr Area’ and set missing values to 0.
+Discrete Variables:
+- Filled missing values for ‘Bsmt Full Bath’, ‘Bsmt Half Bath’ to zero.
+- Imputed ‘Garage Yr Blt’ based on the average value for houses built in the same year. 
+- ‘Mo Sold’ and ‘Yr Sold’ were treated as Nominal variables.
+Nominal Variables:
+- Any missing values were given the label ‘None’. 
+- ‘MS SubClass’ was converted from an integer to a string.
+- All nominal variables were one hot encoded into dummy columns
+Ordinal Variables:
+- All ordinal variables were assigned positive numerical values based on hierarchical information provided in the data dictionary.
+- For example, the ‘Bsmt Qual’ variable was recoded so that ‘Poor’ was assigned a value of 1 and ‘Excellent’ was assigned a value of 5.
+
+Additional steps:
+- Outliers: Removed two rows with ‘Gr Liv Area’ greater than 4,000 square feet, following guidance from data dictionary.
+- Missing Data: Two rows were also removed for having significant missing data for several columns. 
 
 ---
 
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+### Feature Engineering and Preprocessing
 
-**Scores will be out of 27 points based on the 9 items in the rubric.** <br>
-*3 points per section*<br>
+Feature engineering and preprocessing steps were carried out in the **02_Preprocessing_and_Feature_Engineering** file in the *code* directory.  This file takes in 'train_clean_features.csv' from the *datasets* directory and after transforming additional features produces the 'X_y_features.csv' file in the *datasets* directory.
 
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
+Three new features were created to ease interpretability of analysis:
+- ‘Total Bath’: sum of all bathrooms in the house with a .5 weight on half baths
+- ‘Time Since Remodel’: The difference between ‘Year Sold’ and ‘Year Remodel/Add’
+- ‘Age when sold’: The difference between ‘Year Sold’ and ‘Year Built 
+Three interaction features were added to the dataset as well:
+- 'Overall Qual * Gr Live Area'
+- 'Overall Qual * Year Built'
+- 'Overall Qual * Remodle/Add'
 
-### The Data Science Process
+In addition, our target variable 'SalePrice' was log transformed to produce a more normal distribution.
 
-**Problem Statement**
-- Is it clear what the student plans to do?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
+---
 
-**Data Cleaning and EDA**
-- Are missing values imputed appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
+### Analysis
 
-**Preprocessing and Modeling**
-- Are categorical variables one-hot encoded?
-- Does the student investigate or manufacture features with linear relationships to the target?
-- Have the data been scaled appropriately?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student utilize feature selection to remove noisy or multi-collinear features?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** linear regression, lasso, and ridge)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
+Several types of regression are performed in the **03_Modeling_and_Submissions** file in the *code* directory.  This file uses the 'X_y_features.csv' file found in the *datasets* directory.  After producing a suitable regression model, the file takes in 'test_clean_features.csv' file in the *datasets* directory to perform the same transformations on the test dataset that were peformed on the training dataset.  This is the test data used for a [kaggle competition] (https://www.kaggle.com/c/dsi-us-13-project-2-regression-challenge/overview).  The file also produces .csv files in the correct format for kaggle submission.  All submissions made to kaggle are found in the *submissions* folder.
 
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Is more than one metric utilized in order to better assess performance?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
+Three types of regression were used in this study
 
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
+**Ridge Regression:** The model with the lowest Root Mean Squared Error (RMSE) for the Kaggle submission was a Ridge Regression which iterated over 100 values to optimize alpha.
+- R2 for Training set: 0.93
+- R2 for Test set: 0.92
+- The RMSE for the Test Set: $21,075
+This model explains 93% of the variance of the Sales Price for our test data.  The high and similar R2 for Train and Test indicate this model should perform well on unseen data.
 
-### Organization and Professionalism
+**Lasso Regression:** Despite not performing as well on the Kaggle set, Lasso was used to help determine features most likely to be useful for a more interpretable linear model. 
+- R2 for Training set: 0.93
+- R2 for Test set: 0.93
+- The RMSE for the Test Set: $20,909
+This plot shows the highest Lasso coefficient values after regularization.  These features were used to develop the final (and most interpretable) linear model.
 
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
+**Linear Regression:** Linar Regression was used on the set of features with the highest coefficients from the Lasso Regularization performed.  This modle was ued to produce the most interpretable and actionable coefficients.
+- R2 for Training set: 0.91
+- R2 for Test set: 0.91
+- The RMSE for the Test Set: $23,423
+This model still explains 91% of the variance for Sale Price on the testing data, and does not show signs of overfitting.  Furthermore, the coefficients provide meaningful information about how much additional value each feature provides when controlling for all other variables.
 
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
+---
 
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` methods used appropriately?
+### Conclusions and Recommendations
 
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
+With appropriate data cleaning techniques, regularized regression performs well fitting the Ames housing data set to Sale Price with minimum feature engineering.
 
-In order to pass the project, students must earn a minimum score of 1 for each category.
-- Earning below a 1 in one or more of the above categories would result in a failing project.
-- While a minimum of 1 in each category is the required threshold for graduation, students should aim to earn at least an average of 1.5 across each category. An average score below 1.5, while it may be passing, means students may want to solicit specific feedback in order to significantly improve the project before showcasing it as part of a portfolio or the job search.
+Linear Regression without regularization provides quantifiable insights for homeowners and potential buyers:
+- Neighborhoods matter - with some neighborhoods commanding a $100,000 price premium, all else held constant
+- Recent Remodels, Add Ons, Basement finishes can improve the value of the home
+- Space is at a premium - over $50 per square feet
+- Projects improving the heating or exterior quality of the home are probably worth it, but specific home improvement costs can be checked against model coefficients to evaluate return on investment 
 
-### REMEMBER:
 
-This is a learning environment and you are encouraged to try new things, even if they don't work out as well as you planned! While this rubric outlines what we look for in a _good_ project, it is up to you to go above and beyond to create a _great_ project. **Learn from your failures and you'll be prepared to succeed in the workforce**.
