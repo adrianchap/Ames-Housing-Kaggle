@@ -19,7 +19,7 @@ In total, there were 23 nomina, 23 ordinal, 14 discrete, and 20 continuous varia
 
 ### Data Cleaning
 
-All data cleaning steps are carried out in the file **01_EDA_and_Cleaning** in the *code** directory of this repository.  This file takes in the 'train.csv' and 'test.csv' files to produce clean datasets for testing: 'train_clean_features.csv; and 'test_clean_features.csv', in the *datasets* directory. Cleaning steps for each variable type are outlined below:
+All data cleaning steps are carried out in the file **01_EDA_and_Cleaning** in the *code* directory of this repository.  This file takes in the 'train.csv' and 'test.csv' files to produce clean datasets for testing: 'train_clean_features.csv; and 'test_clean_features.csv', in the *datasets* directory. Cleaning steps for each variable type are outlined below:
 
 Continouous Variables: 
 - Assumed missing values meant the feature didn’t exist for that property for ‘Lot Frontage’ and ‘Mas Vnr Area’ and set missing values to 0.
